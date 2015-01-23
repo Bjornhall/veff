@@ -18,5 +18,20 @@ $(".swatch").click(function(event) {
     drawing.nextColor = $(this).attr("data-colortype");
 });
 
+var Shape = Base.extend({
+    constructor: function(x,y,color) {
+        this.x = x;
+        this.y = y;
+        this.color = color;
+    },
+    draw: function(context) {
 
+    }
+});
+
+var Rect = Shape.extend({
+    draw: function(x,y,color){
+
+    }
+});
 
