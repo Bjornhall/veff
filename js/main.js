@@ -19,26 +19,24 @@ var drawing = {
     nextObject: "pen",
     nextColor: "black",
 
-    createRect: function (x,y,color){
-        var r = new Rect(x,y,color);
-        console.log(r.x);
-        console.log(r.color);
-        drawing.shapes.push(r);
+    createRect: function (x,y,color,height,width){
+        var r = new Rect(x,y,color,height,width);
+        this.shapes.push(r);
     },
 
     drawAll: function drawAll() {
         for (var i = 0; i < drawing.shapes.length; ++i) {
-            drawing.shapes[i].draw();
+            this.shapes[i].draw();
         }
     }
 };
 
 var Shape = Base.extend({
-    constructor: function(x,y,color){
+    constructor: function(x,y,color, height, width){
         this.x          = x;
         this.y          = y;
-        this.endX       = 100;
-        this.endY       = 100;
+        this.height     = height;
+        this.width      = width;
         this.color      = color;
         // this.type       = type;
         // this.lineWidth  = lineWidth;
@@ -52,7 +50,7 @@ var Shape = Base.extend({
 var Rect = Shape.extend({
     draw: function(){
         context.beginPath();
-        context.rect(this.x, this.y, 100, 100);
+        context.rect(this.x, this.y, this.height, this.width);
         context.fillStyle = this.color;
         context.fill();
         context.lineWidth = 7;
@@ -66,20 +64,21 @@ var engage = function(e){
     color = "#000";
     starting_x = e.offsetX;
     starting_y = e.offsetY;
-
-    console.log(starting_x);
-    console.log(starting_y);
-
+    console.log("Starting X: " + starting_x);
+    console.log("Starting Y: " + starting_y);
 }
 
 var disengage = function(e){
-    // ending_x = e.offsetX;
-    // ending_y = e.offsetY;
-    console.log("In the disengage function");
-    console.log(starting_x);
-    console.log(starting_y);
+    ending_x = e.offsetX;
+    ending_y = e.offsetY;
+    var height = ending_y - starting_y;
+    var width = ending_x - starting_x;
 
-    drawing.createRect(starting_x,starting_y,'#fff');
+    console.log("Ending X: " + ending_x);
+    console.log("Ending Y: " + ending_y);
+
+
+    drawing.createRect(starting_x,starting_y,'#fff', height, width);
     drawing.drawAll();
 }
 
