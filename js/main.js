@@ -20,8 +20,9 @@ var drawing = {
     nextColor: "black",
 
     createRect: function (x,y,color){
-        var r = new Rect();
-        console.log("This is the new rect object" + r);
+        var r = new Rect(x,y,color);
+        console.log(r.x);
+        console.log(r.color);
         drawing.shapes.push(r);
     },
 
