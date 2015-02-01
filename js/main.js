@@ -39,19 +39,19 @@ var drawing = {
     shapes: [],
     nextObject: "pen",
     nextColor: "black",
-    lineWidth: "4",
+    nextLineWidth: "4",
     nextLineColor: "black",
 
     createRect: function (x,y,endX,endY){
-        var r = new Rect(x,y,endX,endY,this.nextColor,this.nextObject,this.lineWidth, this.nextLineColor);
+        var r = new Rect(x,y,endX,endY,this.nextColor,this.nextObject,this.nextLineWidth, this.nextLineColor);
         this.shapes.push(r);
     },
     createLine: function(x,y,endX,endY){
-        var l = new Line(x,y,endX,endY,this.nextColor,this.nextObject,this.lineWidth, this.nextLineColor);
+        var l = new Line(x,y,endX,endY,this.nextColor,this.nextObject,this.nextLineWidth, this.nextLineColor);
         this.shapes.push(l);
     },
     createCircle: function(x,y,endX,endY){
-        var c = new Circle(x,y,endX,endY,this.nextColor,this.nextObject,this.lineWidth, this.nextLineColor);
+        var c = new Circle(x,y,endX,endY,this.nextColor,this.nextObject,this.nextLineWidth, this.nextLineColor);
         this.shapes.push(c);
     },
 
@@ -175,7 +175,17 @@ $(".swatch").click(function(event) {
 });
 
 $(".swatch-line").click(function(event) {
-    console.log()
     drawing.nextLineColor = $(this).attr("data-colortype");
+});
+
+$(".radcontrol").click(function(event) {
+    drawing.nextLineWidth = $(".radval").val();
+    console.log(drawing.nextLineWidth);
+});
+
+$('#clear-btn').on('click', function(){
+    if(confirm("Are you sure?")){
+        context.clearRect(0, 0, canvas.width, canvas.height);
+    }
 });
 
