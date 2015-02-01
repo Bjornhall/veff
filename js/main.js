@@ -12,9 +12,7 @@ context.lineWidth = radius*2;
 var starting_x,
     starting_y,
     ending_x,
-    ending_y,
-    move_x,
-    move_y;
+    ending_y;
 
 var Point = Base.extend ({
     constructor: function(x,y){
@@ -30,18 +28,21 @@ var startPoint = new Point(0,0),
 var calcHeightWidth = function(starting_x,starting_y,ending_x,ending_y){
     var heightWidth = [];
 
-    if(starting_y < ending_y){
-        heightWidth[0] = ending_y - starting_y;
-    }
-    else if (starting_y > ending_y){
-        heightWidth[0] = ending_y - starting_y;
-    }
-    if(starting_x < ending_x){
-        heightWidth[1] = ending_x - starting_x;
-    }
-    else if(starting_x > ending_x){
-        heightWidth[1] = ending_x - starting_x;
-    }
+    heightWidth[0] = ending_x - starting_x;
+    heightWidth[1] = ending_y - starting_y;
+
+    // if(starting_y < ending_y){
+    //     heightWidth[0] = ending_y - starting_y;
+    // }
+    // else if (starting_y > ending_y){
+    //     heightWidth[0] = ending_y - starting_y;
+    // }
+    // if(starting_x < ending_x){
+    //     heightWidth[1] = ending_x - starting_x;
+    // }
+    // else if(starting_x > ending_x){
+    //     heightWidth[1] = ending_x - starting_x;
+    // }
     return heightWidth;
 }
 
@@ -56,10 +57,11 @@ var drawing = {
     shapes: [],
     nextObject: "pen",
     nextColor: "black",
-    lineWidth: "7",
+    lineWidth: "4",
+    nextLineColor: "black",
 
     createRect: function (x,y,endX,endY){
-        var r = new Rect(x,y,endX,endY,this.nextColor,this.nextObject,this.lineWidth);
+        var r = new Rect(x,y,endX,endY,this.nextColor,this.lineWidth, this.nextLineColor);
         this.shapes.push(r);
     },
 
@@ -75,7 +77,7 @@ var drawing = {
 };
 
 var Shape = Base.extend({
-    constructor: function(startX,startY,endX,endY,color,type,lineWidth){
+    constructor: function(startX,startY,endX,endY,color,type,lineWidth,lineColor){
         this.x          = startX;
         this.y          = startY;
         this.endX       = endX;
@@ -83,6 +85,7 @@ var Shape = Base.extend({
         this.color      = color;
         this.type       = type;
         this.lineWidth  = lineWidth;
+        this.lineColor  = lineColor;
         this.selected   = false;
     },
     draw: function(context) {
@@ -97,14 +100,13 @@ var Rect = Shape.extend({
         context.fillStyle = this.color;
         context.fill();
         context.lineWidth = this.lineWidth;
-        context.strokeStyle = this.color;
+        context.strokeStyle = this.lineColor;
         context.stroke();
     }
 });
 
 var engage = function(e){
-    //dragging = true;
-    color = "#000";
+    dragging = true;
     starting_x = e.offsetX;
     starting_y = e.offsetY;
     console.log("Starting X: " + starting_x);
@@ -115,7 +117,18 @@ var engage = function(e){
 }
 
 var moving = function(e){
+    if(drawing.nextObject === "pencil"){
 
+    }
+    else if (drawing.nextObject === "rectangle") {
+
+    }
+    else if (drawing.nextObject === "circle") {
+
+    }
+    else if (drawing.nextObject === "line") {
+
+    }
 }
 
 var disengage = function(e){
@@ -141,8 +154,10 @@ $(".select-tool").on('click', function(event) {
 });
 
 $(".swatch").click(function(event) {
-    console.log($(this).attr("data-colortype"));
     drawing.nextColor = $(this).attr("data-colortype");
 });
 
+$(".swatch-line").click(function(event) {
+    drawing.nextLineColor = $(this).attr("data-colortype");
+});
 
