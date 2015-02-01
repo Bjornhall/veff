@@ -14,6 +14,8 @@ var starting_x,
     ending_x,
     ending_y;
 
+var undoShape;
+
 var Point = Base.extend ({
     constructor: function(x,y){
         this.x = x;
@@ -37,7 +39,7 @@ var calcHeightWidth = function(starting_x,starting_y,ending_x,ending_y){
 // Drawing object, stores all shapes in one drawing object
 var drawing = {
     shapes: [],
-    nextObject: "pen",
+    nextObject: "rectangle",
     nextColor: "black",
     nextLineWidth: "4",
     nextLineColor: "black",
@@ -60,7 +62,7 @@ var drawing = {
         context.clearRect(0, 0, canvas.width, canvas.height);
         for (var i = 0; i < drawing.shapes.length; ++i) {
             this.shapes[i].draw();
-            console.log(this.shapes[i]);
+            // console.log(this.shapes[i]);
         }
     }
 };
@@ -120,11 +122,10 @@ var engage = function(e){
     dragging = true;
     starting_x = e.offsetX;
     starting_y = e.offsetY;
-    console.log("Starting X: " + starting_x);
-    console.log("Starting Y: " + starting_y);
+
     startPoint.x = starting_x;
     startPoint.y = starting_y;
-    console.log(startPoint);
+    // console.log(startPoint);
 }
 
 var moving = function(e){
@@ -177,15 +178,28 @@ $(".swatch").click(function(event) {
 $(".swatch-line").click(function(event) {
     drawing.nextLineColor = $(this).attr("data-colortype");
 });
-
+// Virknin er global, þaf að laga
 $(".radcontrol").click(function(event) {
     drawing.nextLineWidth = $(".radval").val();
-    console.log(drawing.nextLineWidth);
 });
 
 $('#clear-btn').on('click', function(){
     if(confirm("Are you sure?")){
         context.clearRect(0, 0, canvas.width, canvas.height);
+        drawing.shapes = [];
     }
+});
+
+$('#undo-btn').on('click', function(){
+    undoShape = drawing.shapes.pop();
+    drawing.drawAll();
+});
+
+$('#redo-btn').on('click', function(){
+    // Reyna að koma í veg fyrir að sama objectið sé pushað aftur og aftur í shapes!
+    if(JSON.stringify(undoShape) !== JSON.stringify(drawing.shapes[drawing.shapes.length])){
+        drawing.shapes.push(undoShape);
+    }
+    drawing.drawAll();
 });
 
