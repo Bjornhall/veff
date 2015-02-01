@@ -179,17 +179,17 @@ var moving = function(e){
         else if (drawing.nextObject === "rectangle") {
             drawing.shapes[drawing.shapes.length - 1].endX = e.offsetX;
             drawing.shapes[drawing.shapes.length - 1].endY = e.offsetY;
-            drawing.shapes[drawing.shapes.length - 1].draw();
+            drawing.drawAll();
         }
         else if (drawing.nextObject === "circle") {
             drawing.shapes[drawing.shapes.length - 1].endX = e.offsetX;
             drawing.shapes[drawing.shapes.length - 1].endY = e.offsetY;
-            drawing.shapes[drawing.shapes.length - 1].draw();
+            drawing.drawAll();
         }
         else if (drawing.nextObject === "line") {
             drawing.shapes[drawing.shapes.length - 1].endX = e.offsetX;
             drawing.shapes[drawing.shapes.length - 1].endY = e.offsetY;
-            drawing.shapes[drawing.shapes.length - 1].draw();
+            drawing.drawAll();
         }
     }
 }
