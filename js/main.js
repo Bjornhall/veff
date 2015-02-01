@@ -1,8 +1,22 @@
 var canvas = document.getElementById("canvas");
 var context = canvas.getContext('2d');
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+// canvas.width = window.innerWidth - 220;
+// canvas.height = window.innerHeight;
+
+$(document).ready(function() {
+  function setHeight() {
+    canvas.width = window.innerWidth - 220;
+    canvas.height = window.innerHeight;
+    var windowHeight = $(window).innerHeight();
+    $('#sidebar').css('min-height', windowHeight);
+  };
+  setHeight();
+
+  $(window).resize(function() {
+    setHeight();
+  });
+});
 
 var dragging = false;
 var radius = 10;
@@ -62,7 +76,6 @@ var drawing = {
         context.clearRect(0, 0, canvas.width, canvas.height);
         for (var i = 0; i < drawing.shapes.length; ++i) {
             this.shapes[i].draw();
-            // console.log(this.shapes[i]);
         }
     }
 };
@@ -80,6 +93,21 @@ var Shape = Base.extend({
         this.selected   = false;
     },
     draw: function(context) {
+    }
+});
+
+var Pen = Shape.extend({
+    constructor : function(startX,startY){
+        this.penPath = [];
+    },
+    draw: function(){
+        context.lineTo(e.clientX, e.clientY);
+        context.stroke();
+        context.beginPath();
+        context.arc(e.clientX, e.clientY, radius, 0, Math.PI*2);
+        context.fill();
+        context.beginPath();
+        context.moveTo(e.clientX, e.clientY);
     }
 });
 
@@ -174,6 +202,8 @@ var disengage = function(e){
     drawing.shapes[drawing.shapes.length - 1].endX = e.offsetX;
     drawing.shapes[drawing.shapes.length - 1].endY = e.offsetY;
 
+    appendShapesToList();
+
     drawing.drawAll();
 }
 
@@ -218,3 +248,6 @@ $('#redo-btn').on('click', function(){
     drawing.drawAll();
 });
 
+var appendShapesToList = function(){
+    $('.list-of-shapes').append('<div class="shape-item">' + drawing.shapes[drawing.shapes.length - 1].type + "-" + drawing.shapes.length +'</div>');
+}

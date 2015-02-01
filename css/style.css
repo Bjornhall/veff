@@ -10,6 +10,8 @@ body {
     -webkit-font-feature-settings: "kern";
     -moz-font-feature-settings: "kern";
     -moz-font-feature-settings: "kern=1";
+
+    background-color: #3d3d3d;
 }
 
 * {
@@ -19,6 +21,44 @@ body {
     user-select:none;
     -webkit-user-select:none;
     -moz-user-select:none;
+}
+
+/*=================================================
+Clearfix
+===================================================*/
+
+.clearfix:before,
+.clearfix:after {
+    content: " ";
+    display: table;
+}
+
+.clearfix:after {
+    clear: both;
+}
+
+.clearfix {
+    *zoom: 1;
+}
+
+/*=================================================
+End Clearfix
+===================================================*/
+
+.main{
+    width:100%;
+}
+
+#canvas {
+    float:left;
+    background-color: #fff;
+}
+
+#sidebar {
+    float: left;
+    background-color: #3d3d3d;
+    width: 205px;
+    padding-top: 60px;
 }
 
 #rad {
@@ -35,7 +75,7 @@ body {
 }
 #actions{
     width:20%;
-    float:left;
+    float:right;
 }
 
 #colors div {
@@ -94,3 +134,36 @@ select {
     background-color: #939393;
 }
 
+.list-of-shapes h4{
+    text-align: center;
+    color: white;
+    font-weight: 500;
+    font-size: 2em;
+}
+
+.list-of-shapes div {
+    text-align: center;
+    color:white;
+}
+
+.list-of-shapes .shape-item {
+    padding: 5px;
+    border:solid;
+    border-width: 1px;
+    border-color: #4d4d4d;
+}
+
+.btn {
+    text-decoration: none;
+    width: 50px;
+    height: 30px;
+    text-align: center;
+    font-family: 'Open Sans', sans-serif;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: #2689DB;
+}
+
+.btn:hover{
+    curser:pointer;
+}
