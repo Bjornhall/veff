@@ -122,30 +122,11 @@ var engage = function(e){
     dragging = true;
     starting_x = e.offsetX;
     starting_y = e.offsetY;
+    ending_x = e.offsetX;
+    ending_y = e.offsetY;
 
     startPoint.x = starting_x;
     startPoint.y = starting_y;
-    // console.log(startPoint);
-}
-
-var moving = function(e){
-    if(drawing.nextObject === "pencil"){
-
-    }
-    else if (drawing.nextObject === "rectangle") {
-
-    }
-    else if (drawing.nextObject === "circle") {
-
-    }
-    else if (drawing.nextObject === "line") {
-
-    }
-}
-
-var disengage = function(e){
-    ending_x = e.offsetX;
-    ending_y = e.offsetY;
 
     if(drawing.nextObject === "pencil"){
 
@@ -160,12 +141,46 @@ var disengage = function(e){
     else if (drawing.nextObject === "line") {
         drawing.createLine(starting_x,starting_y,ending_x,ending_y);
     }
+}
+
+var moving = function(e){
+    if(dragging){
+        if(drawing.nextObject === "pencil"){
+
+        }
+        else if (drawing.nextObject === "rectangle") {
+            drawing.shapes[drawing.shapes.length - 1].endX = e.offsetX;
+            drawing.shapes[drawing.shapes.length - 1].endY = e.offsetY;
+            drawing.shapes[drawing.shapes.length - 1].draw();
+        }
+        else if (drawing.nextObject === "circle") {
+            drawing.shapes[drawing.shapes.length - 1].endX = e.offsetX;
+            drawing.shapes[drawing.shapes.length - 1].endY = e.offsetY;
+            drawing.shapes[drawing.shapes.length - 1].draw();
+        }
+        else if (drawing.nextObject === "line") {
+            drawing.shapes[drawing.shapes.length - 1].endX = e.offsetX;
+            drawing.shapes[drawing.shapes.length - 1].endY = e.offsetY;
+            drawing.shapes[drawing.shapes.length - 1].draw();
+        }
+    }
+}
+
+var disengage = function(e){
+    dragging = false;
+    ending_x = e.offsetX;
+    ending_y = e.offsetY;
+
+    drawing.shapes[drawing.shapes.length - 1].endX = e.offsetX;
+    drawing.shapes[drawing.shapes.length - 1].endY = e.offsetY;
+
     drawing.drawAll();
 }
 
 canvas.addEventListener('mousedown', engage);
+canvas.addEventListener('mousemove', moving);
 canvas.addEventListener('mouseup', disengage);
-// canvas.addEventListener('mousemove', putPoint);
+
 
 $(".select-tool").on('click', function(event) {
     drawing.nextObject = $(this).attr("data-tooltype");
