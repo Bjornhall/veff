@@ -1,9 +1,7 @@
 var canvas = document.getElementById("canvas");
 var context = canvas.getContext('2d');
 
-// canvas.width = window.innerWidth - 220;
-// canvas.height = window.innerHeight;
-
+// Fall sem stillir af stærðina á canvas-num
 $(document).ready(function() {
   function setHeight() {
     canvas.width = window.innerWidth - 220;
@@ -19,8 +17,7 @@ $(document).ready(function() {
 });
 
 var dragging = false;
-var radius = 10;
-context.lineWidth = radius*2;
+var radius = 5;
 
 /* GlobalVariables */
 var starting_x,
@@ -28,7 +25,7 @@ var starting_x,
     ending_x,
     ending_y;
 
-var undoShape;
+var undoShape = [];
 
 var Point = Base.extend ({
     constructor: function(x,y){
@@ -53,11 +50,15 @@ var calcHeightWidth = function(starting_x,starting_y,ending_x,ending_y){
 // Drawing object, stores all shapes in one drawing object
 var drawing = {
     shapes: [],
-    nextObject: "rectangle",
+    nextObject: "pencil",
     nextColor: "black",
     nextLineWidth: "4",
     nextLineColor: "black",
 
+    createPen: function(x,y){
+        var p = new Pen(x,y,x,y,this.nextColor,this.nextObject,this.nextLineWidth, this.nextLineColor);
+        this.shapes.push(p);
+    },
     createRect: function (x,y,endX,endY){
         var r = new Rect(x,y,endX,endY,this.nextColor,this.nextObject,this.nextLineWidth, this.nextLineColor);
         this.shapes.push(r);
@@ -91,23 +92,24 @@ var Shape = Base.extend({
         this.lineWidth  = lineWidth;
         this.lineColor  = lineColor;
         this.selected   = false;
+        this.penPath    = [];
     },
     draw: function(context) {
     }
 });
 
 var Pen = Shape.extend({
-    constructor : function(startX,startY){
-        this.penPath = [];
-    },
     draw: function(){
-        context.lineTo(e.clientX, e.clientY);
-        context.stroke();
         context.beginPath();
-        context.arc(e.clientX, e.clientY, radius, 0, Math.PI*2);
-        context.fill();
-        context.beginPath();
-        context.moveTo(e.clientX, e.clientY);
+        for(var i = 0; i < this.penPath.length; i++){
+            context.lineTo(this.penPath[i].x, this.penPath[i].y);
+            context.stroke();
+            context.beginPath();
+            context.arc(this.penPath[i].x, this.penPath[i].y, radius, 0, Math.PI*2);
+            context.fill();
+            context.beginPath();
+            context.moveTo(this.penPath[i].x, this.penPath[i].y);
+        }
     }
 });
 
@@ -148,16 +150,14 @@ var Line = Shape.extend({
 
 var engage = function(e){
     dragging = true;
+
     starting_x = e.offsetX;
     starting_y = e.offsetY;
     ending_x = e.offsetX;
     ending_y = e.offsetY;
 
-    startPoint.x = starting_x;
-    startPoint.y = starting_y;
-
     if(drawing.nextObject === "pencil"){
-
+        drawing.createPen(starting_x,starting_y);
     }
     else if (drawing.nextObject === "rectangle") {
         var h_w = calcHeightWidth(starting_x,starting_y,ending_x,ending_y);
@@ -169,12 +169,15 @@ var engage = function(e){
     else if (drawing.nextObject === "line") {
         drawing.createLine(starting_x,starting_y,ending_x,ending_y);
     }
+    drawing.drawAll();
 }
 
 var moving = function(e){
     if(dragging){
         if(drawing.nextObject === "pencil"){
-
+            var p = new Point(e.offsetX,e.offsetY);
+            drawing.shapes[drawing.shapes.length - 1].penPath.push(p);
+            drawing.drawAll();
         }
         else if (drawing.nextObject === "rectangle") {
             drawing.shapes[drawing.shapes.length - 1].endX = e.offsetX;
@@ -236,14 +239,14 @@ $('#clear-btn').on('click', function(){
 });
 
 $('#undo-btn').on('click', function(){
-    undoShape = drawing.shapes.pop();
+    undoShape.push(drawing.shapes.pop());
     drawing.drawAll();
 });
 
 $('#redo-btn').on('click', function(){
     // Reyna að koma í veg fyrir að sama objectið sé pushað aftur og aftur í shapes!
     if(JSON.stringify(undoShape) !== JSON.stringify(drawing.shapes[drawing.shapes.length])){
-        drawing.shapes.push(undoShape);
+        drawing.shapes.push(undoShape.pop());
     }
     drawing.drawAll();
 });

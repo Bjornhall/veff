@@ -49,7 +49,7 @@ var putPoint = function(e){
 	      	context.stroke();
 		}
 
-	}	
+	}
 }
 
 var engage = function(e){
