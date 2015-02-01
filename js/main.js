@@ -61,7 +61,7 @@ var drawing = {
     nextLineColor: "black",
 
     createRect: function (x,y,endX,endY){
-        var r = new Rect(x,y,endX,endY,this.nextColor,this.lineWidth, this.nextLineColor);
+        var r = new Rect(x,y,endX,endY,this.nextColor,this.nextObject,this.lineWidth, this.nextLineColor);
         this.shapes.push(r);
     },
 
@@ -158,6 +158,7 @@ $(".swatch").click(function(event) {
 });
 
 $(".swatch-line").click(function(event) {
+    console.log()
     drawing.nextLineColor = $(this).attr("data-colortype");
 });
 
