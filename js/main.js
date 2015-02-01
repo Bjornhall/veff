@@ -31,25 +31,7 @@ var calcHeightWidth = function(starting_x,starting_y,ending_x,ending_y){
     heightWidth[0] = ending_x - starting_x;
     heightWidth[1] = ending_y - starting_y;
 
-    // if(starting_y < ending_y){
-    //     heightWidth[0] = ending_y - starting_y;
-    // }
-    // else if (starting_y > ending_y){
-    //     heightWidth[0] = ending_y - starting_y;
-    // }
-    // if(starting_x < ending_x){
-    //     heightWidth[1] = ending_x - starting_x;
-    // }
-    // else if(starting_x > ending_x){
-    //     heightWidth[1] = ending_x - starting_x;
-    // }
     return heightWidth;
-}
-
-var calcPointHeightWidth = function(PointA, PointB){
-    if (PointA.x < PointB.x && PointA.y < PointB.y) {
-
-    }
 }
 
 // Drawing object, stores all shapes in one drawing object
@@ -64,6 +46,14 @@ var drawing = {
         var r = new Rect(x,y,endX,endY,this.nextColor,this.nextObject,this.lineWidth, this.nextLineColor);
         this.shapes.push(r);
     },
+    createLine: function(x,y,endX,endY){
+        var l = new Line(x,y,endX,endY,this.nextColor,this.nextObject,this.lineWidth, this.nextLineColor);
+        this.shapes.push(l);
+    },
+    createCircle: function(x,y,endX,endY){
+        var c = new Circle(x,y,endX,endY,this.nextColor,this.nextObject,this.lineWidth, this.nextLineColor);
+        this.shapes.push(c);
+    },
 
     drawAll: function drawAll() {
         // clearing canvas before drawing all objects
@@ -72,7 +62,6 @@ var drawing = {
             this.shapes[i].draw();
             console.log(this.shapes[i]);
         }
-
     }
 };
 
@@ -101,6 +90,28 @@ var Rect = Shape.extend({
         context.fill();
         context.lineWidth = this.lineWidth;
         context.strokeStyle = this.lineColor;
+        context.stroke();
+    }
+});
+
+var Circle = Shape.extend({
+    draw: function(){
+        var radius = Math.abs(this.x - this.endX);
+        context.beginPath();
+        context.arc(this.x, this.y, radius, 0, 2 * Math.PI, false);
+        context.fillStyle = this.color;
+        context.fill();
+        context.lineWidth = this.lineWidth;
+        context.strokeStyle = this.lineColor;
+        context.stroke();
+    }
+});
+
+var Line = Shape.extend({
+    draw: function(){
+        context.beginPath();
+        context.moveTo(this.x, this.y);
+        context.lineTo(this.endX, this.endY);
         context.stroke();
     }
 });
@@ -135,13 +146,19 @@ var disengage = function(e){
     ending_x = e.offsetX;
     ending_y = e.offsetY;
 
-    console.log("Ending X: " + ending_x);
-    console.log("Ending Y: " + ending_y);
+    if(drawing.nextObject === "pencil"){
 
-    var h_w = calcHeightWidth(starting_x,starting_y,ending_x,ending_y);
-    console.log("Height: " + h_w[0]);
-    console.log("Width: " + h_w[1]);
-    drawing.createRect(starting_x,starting_y,ending_x,ending_y);
+    }
+    else if (drawing.nextObject === "rectangle") {
+        var h_w = calcHeightWidth(starting_x,starting_y,ending_x,ending_y);
+        drawing.createRect(starting_x,starting_y,ending_x,ending_y);
+    }
+    else if (drawing.nextObject === "circle") {
+        drawing.createCircle(starting_x,starting_y,ending_x,ending_y);
+    }
+    else if (drawing.nextObject === "line") {
+        drawing.createLine(starting_x,starting_y,ending_x,ending_y);
+    }
     drawing.drawAll();
 }
 
